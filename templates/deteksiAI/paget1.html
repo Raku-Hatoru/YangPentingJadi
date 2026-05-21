@@ -18,7 +18,7 @@
   <!-- ========== NAVBAR ========== -->
   <nav class="navbar">
     <div class="container navbar__inner">
-      <a href="{{ url_for('index') }}" class="navbar__brand">
+      <a href="{{ url_for('home') }}" class="navbar__brand">
         <span class="navbar__logo-icon" aria-hidden="true">
           <img src="{{ url_for('static', filename='images/Kampung Tani Logo.png') }}">
         </span>
@@ -28,8 +28,8 @@
         <span></span><span></span><span></span>
       </button>
       <ul class="navbar__menu" id="navMenu">
-        <li><a href="{{ url_for('index') }}#home" class="navbar__link">Home</a></li>
-        <li><a href="{{ url_for('index') }}#about" class="navbar__link">Profile</a></li>
+        <li><a href="{{ url_for('home') }}#home" class="navbar__link">Home</a></li>
+        <li><a href="{{ url_for('home') }}#about" class="navbar__link">Profile</a></li>
         <li><a href="{{ url_for('deteksi') }}" class="navbar__link navbar__link--active">Deteksi Penyakit</a></li>
       </ul>
     </div>

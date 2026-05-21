@@ -9,19 +9,16 @@
 </head>
 
 <body>
-
     <!-- Navbar -->
     <nav class="navbar">
         <div class="navbar-brand">
-            <div class="brand-icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round">
+            <div class="brand-icon"> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" />
                     <path d="M8 12s1.5 2 4 2 4-2 4-2" />
                     <line x1="9" y1="9" x2="9.01" y2="9" />
                     <line x1="15" y1="9" x2="15.01" y2="9" />
-                </svg>
-            </div>
+                </svg> </div>
             <div>
                 <div class="brand-name">Kampung Tani</div>
                 <div class="brand-status">Online | Siap membantu</div>
@@ -57,23 +54,75 @@
             </div>
 
             <!-- Upload zone -->
-            <div class="upload-zone" id="uploadZone">
-                <input type="file" id="fileInput" accept="image/*" class="file-hidden" />
-                <div class="upload-icon-wrap">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
-                        <circle cx="12" cy="13" r="4" />
-                    </svg>
+            <form id="prediction-form" action="{{ url_for('predict') }}" method="post" enctype="multipart/form-data">
+
+                <div class="upload-zone" id="uploadZone">
+
+                    <!-- Hidden Input -->
+                    <input type="file" id="fileInput" name="file" accept="image/*,.jpg,.jpeg,.png,.webp"
+                        class="file-hidden" required />
+
+                    <!-- Upload Area -->
+                    <div class="upload-icon-wrap">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+                            <circle cx="12" cy="13" r="4" />
+                        </svg>
+                    </div>
+
+                    <p class="upload-title">Upload foto tanaman</p>
+                    <p class="upload-sub">
+                        Klik atau tarik foto ke sini untuk mengecek kondisinya
+                    </p>
                 </div>
-                <p class="upload-title">Upload foto tanaman</p>
-                <p class="upload-sub">Klik atau tarik foto ke sini untuk mengecek kondisinya</p>
-            </div>
+
+                <!-- PREVIEW -->
+                <div id="preview-wrapper" class="preview-box hidden">
+                    <div class="preview-box__image-wrap">
+                        <img id="preview-image" class="preview-box__image">
+                    </div>
+
+                    <div class="preview-box__info">
+                        <span id="preview-name" class="preview-box__name"></span>
+
+                        <span id="reset-button" class="preview-box__delete">
+                            Hapus
+                        </span>
+                    </div>
+                </div>
+
+                <!-- SUBMIT -->
+                <button type="submit" id="submit-button" class="upload-btn" style="
+      width:100%;
+      margin-top:16px;
+      justify-content:center;
+      padding:14px;
+      font-weight:700;
+    ">
+                    Mulai Analisis
+                </button>
+
+                <!-- LOADING -->
+                <div id="loading-box" class="hidden">
+                    <div class="typing-dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+
+                    <p style="margin-top:10px; font-size:0.85rem; color:#5a6b5c;">
+                        AI sedang menganalisis gambar tanaman...
+                    </p>
+                </div>
+
+            </form>
 
         </div>
     </main>
 
-    <script src="script.js"></script>
+    <script src="{{ url_for('static', filename='js/script_index.js') }}"></script>
 </body>
 
 </html>

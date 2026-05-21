@@ -187,7 +187,7 @@ def faq_detail():
                                data=prediction['data'],
                                faqs=faq_list,
                                faq_count=faq_count,
-                               faq_error="Batas maksimal tanya jawab FAQ (3 kali) telah tercapai untuk sesi diagnosa ini.")
+                               faq_error="Anda telah mencapai maksimal tanya jawab FAQ untuk sesi diagnosa ini.")
                                
     # Request answer from LLM
     try:

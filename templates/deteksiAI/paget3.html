@@ -30,7 +30,7 @@
   <!-- ========== NAVBAR ========== -->
   <nav class="navbar">
     <div class="container navbar__inner">
-      <a href="{{ url_for('index') }}" class="navbar__brand">
+      <a href="{{ url_for('home') }}" class="navbar__brand">
         <span class="navbar__logo-icon" aria-hidden="true">
           <img src="{{ url_for('static', filename='images/Kampung Tani Logo.png') }}">
         </span>
@@ -40,8 +40,8 @@
         <span></span><span></span><span></span>
       </button>
       <ul class="navbar__menu" id="navMenu">
-        <li><a href="{{ url_for('index') }}#home" class="navbar__link">Home</a></li>
-        <li><a href="{{ url_for('index') }}#about" class="navbar__link">Profile</a></li>
+        <li><a href="{{ url_for('home') }}" class="navbar__link">Home</a></li>
+        <li><a href="{{ url_for('home') }}" class="navbar__link">Profile</a></li>
         <li><a href="{{ url_for('deteksi') }}" class="navbar__link navbar__link--active">Deteksi Penyakit</a></li>
       </ul>
     </div>
@@ -137,7 +137,7 @@
           <div class="border-b border-slate-100 pb-4">
             <span class="text-xs font-bold text-emerald-700 uppercase tracking-wider block">Tanya Jawab Lanjutan
               Terjawab</span>
-            <h2 class="text-xl font-bold text-slate-800 mt-1">Jawaban AI Terkait Pertanyaan</h2>
+            <h2 class="text-xl font-bold text-slate-800 mt-1">Jawaban Terkait Pertanyaan</h2>
           </div>
 
           <div class="rounded-2xl bg-emerald-50/25 border border-emerald-100 p-6 space-y-4 shadow-inner">
@@ -147,7 +147,7 @@
             </div>
 
             <div class="border-t border-emerald-100 pt-4">
-              <p class="text-xs font-bold text-emerald-850 uppercase tracking-wider">Jawaban Detail AI:</p>
+              <p class="text-xs font-bold text-emerald-850 uppercase tracking-wider">Jawaban Detail :</p>
               <div class="text-sm text-slate-750 leading-relaxed mt-2 whitespace-pre-line font-medium">{{ answer }}
               </div>
             </div>
