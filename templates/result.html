@@ -4,118 +4,209 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Hasil Analisis | Kampung Tani</title>
+    <!-- Google Fonts Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css') }}">
+    <style>
+      body {
+        font-family: 'Outfit', sans-serif;
+      }
+      .custom-blur {
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+      }
+      .animate-fade-in {
+        animation: fadeIn 0.4s ease-out forwards;
+      }
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      /* Custom scrollbar for FAQ list */
+      #faq-list-container::-webkit-scrollbar {
+        width: 6px;
+      }
+      #faq-list-container::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      #faq-list-container::-webkit-scrollbar-thumb {
+        background-color: #cbd5e1;
+        border-radius: 99px;
+      }
+    </style>
   </head>
-  <body>
-    <header>
-      <div class="flex items-center justify-between gap-4">
-        <a href="{{ url_for('index') }}" class="flex items-center gap-3">
-          <span class="inline-flex rounded-full bg-emerald-700 px-4 py-3 shadow-glow" style="color:#fff;font-weight:800;">KT</span>
+  <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+    <!-- Premium Header / Sticky Navbar -->
+    <header class="sticky top-0 z-50 w-full bg-white/80 custom-blur border-b border-slate-100 transition-all duration-300">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+        <a href="{{ url_for('index') }}" class="flex items-center gap-3 group">
+          <div class="h-12 w-12 rounded-2xl bg-gradient-to-br from-emerald-600 to-emerald-800 flex items-center justify-center shadow-md group-hover:scale-105 transition-transform duration-300">
+            <!-- Modern Leaf SVG Icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-white">
+              <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 3.5 1 9.8a7 7 0 0 1-9 8.2Z"/>
+              <path d="M9 22v-4h4"/>
+            </svg>
+          </div>
           <div>
-            <div class="text-sm font-bold text-emerald-700">Kampung Tani</div>
-            <div class="text-sm text-slate-600">Ringkasan analisis tanaman</div>
+            <div class="text-lg font-extrabold text-emerald-800 tracking-tight leading-none">Kampung Tani</div>
+            <div class="text-xs text-slate-500 font-medium mt-1">Diagnosis Hasil AI</div>
           </div>
         </a>
-        <a href="{{ url_for('index') }}" class="rounded-full border px-5 py-3">Analisis Ulang</a>
+        <a href="{{ url_for('index') }}" class="inline-flex items-center justify-center px-6 py-3 rounded-full border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold active:scale-95 transition-all duration-200 shadow-sm">
+          Analisis Ulang
+        </a>
       </div>
     </header>
 
-    <main>
-      <section class="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
-        <div class="rounded-[2rem] p-6">
-          <p class="text-sm font-bold text-emerald-700" style="letter-spacing:0.2em;">HASIL PREDIKSI</p>
-          <h1 class="mt-3 text-3xl font-bold">{{ predicted_class }}</h1>
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+      <div class="grid grid-cols-1 lg:grid-cols-[0.85fr_1.15fr] gap-8 md:gap-12 items-start">
+        
+        <!-- Left Side: Image and Basic Detection result -->
+        <div class="bg-white border border-slate-100 rounded-[2rem] p-6 shadow-sm space-y-6 lg:sticky lg:top-28">
+          <div class="space-y-1">
+            <span class="text-xs font-bold text-emerald-700 uppercase tracking-wider block">Hasil Deteksi YOLO</span>
+            <h1 class="text-2xl md:text-3xl font-extrabold text-slate-800 tracking-tight leading-tight">
+              {% if data and data.status == "Sehat" %}
+              <span class="text-emerald-700">🟢 {{ predicted_class }}</span>
+              {% else %}
+              <span class="text-amber-600">🟡 {{ predicted_class }}</span>
+              {% endif %}
+            </h1>
+          </div>
+
           {% if image_url %}
-          <div class="mt-5 rounded-[1.5rem] bg-green-50 p-4">
-            <img src="{{ image_url }}" alt="Foto tanaman yang dianalisis" class="h-72 w-full object-cover">
+          <div class="rounded-2xl overflow-hidden aspect-square bg-slate-50 border border-slate-100 relative shadow-sm">
+            <img src="/{{ image_url }}" alt="Foto tanaman yang dianalisis" class="w-full h-full object-cover">
           </div>
           {% endif %}
+
           {% if error %}
-          <div class="mt-5 rounded-[1.5rem] p-5" style="background:#fff1f2;color:#be123c;">
-            <p class="font-bold">Analisis belum menghasilkan rekomendasi</p>
-            <p class="mt-2 text-sm">{{ error }}</p>
+          <div class="rounded-2xl p-4 bg-rose-50 border border-rose-200 text-rose-800 space-y-2">
+            <p class="font-bold text-rose-900">Belum ada rekomendasi</p>
+            <p class="text-xs text-rose-700 leading-relaxed">{{ error }}</p>
           </div>
           {% endif %}
         </div>
 
-        <div class="grid gap-6">
-          <section class="rounded-[2rem] p-6">
-            <h2 class="text-xl font-bold">Diagnosa dan rekomendasi</h2>
+        <!-- Right Side: AI Recommendations and Interactive Q&A Accordion -->
+        <div class="space-y-8">
+          
+          <!-- Recommendation Cards -->
+          <section class="bg-white border border-slate-100 rounded-[2.5rem] p-6 md:p-8 shadow-sm space-y-6">
+            <div class="border-b border-slate-100 pb-4">
+              <h2 class="text-xl font-bold text-slate-800">Diagnosa & Rekomendasi AI</h2>
+              <p class="text-xs text-slate-500 mt-1">Saran penanganan terstruktur yang diformulasikan oleh kecerdasan buatan.</p>
+            </div>
+
             {% if data %}
-            <div class="mt-5 grid gap-4">
-              <article class="rounded-[1.5rem] bg-green-50 p-5">
-                <p class="text-sm font-bold text-emerald-700">Status</p>
-                <p class="mt-2 text-base text-slate-800">{{ data.status }}</p>
+            <div class="grid grid-cols-1 gap-4">
+              <!-- Status & Penyakit Row -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <article class="rounded-2xl bg-slate-50 border border-slate-100 p-5 space-y-2">
+                  <p class="text-xs font-bold text-emerald-800 uppercase tracking-wider">Kondisi</p>
+                  <p class="text-base font-extrabold text-slate-800 leading-none">
+                    {% if data.status == "Sehat" %}
+                    <span class="inline-flex items-center px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold">Tanaman Sehat</span>
+                    {% else %}
+                    <span class="inline-flex items-center px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-xs font-bold">Terinfeksi Gejala</span>
+                    {% endif %}
+                  </p>
+                </article>
+                <article class="rounded-2xl bg-slate-50 border border-slate-100 p-5 space-y-2">
+                  <p class="text-xs font-bold text-emerald-800 uppercase tracking-wider">Nama Penyakit</p>
+                  <p class="text-base font-extrabold text-slate-800 leading-none">{{ data.penyakit }}</p>
+                </article>
+              </div>
+
+              <!-- Penyebab -->
+              <article class="rounded-2xl bg-slate-50 border border-slate-100 p-5 space-y-2">
+                <p class="text-xs font-bold text-emerald-800 uppercase tracking-wider">Faktor Penyebab</p>
+                <p class="text-sm text-slate-600 leading-relaxed">{{ data.penyebab }}</p>
               </article>
-              <article class="rounded-[1.5rem] bg-green-50 p-5">
-                <p class="text-sm font-bold text-emerald-700">Penyakit atau kondisi</p>
-                <p class="mt-2 text-base text-slate-800">{{ data.penyakit }}</p>
+
+              <!-- Solusi Dapur -->
+              <article class="rounded-2xl bg-emerald-50/50 border border-emerald-100 p-5 space-y-2 shadow-sm">
+                <p class="text-xs font-bold text-emerald-800 uppercase tracking-wider flex items-center gap-1.5">
+                  🍳 <span>Solusi Dapur (Alami)</span>
+                </p>
+                <p class="text-sm text-slate-700 leading-relaxed">{{ data.solusi_dapur }}</p>
               </article>
-              <article class="rounded-[1.5rem] bg-green-50 p-5">
-                <p class="text-sm font-bold text-emerald-700">Penyebab</p>
-                <p class="mt-2 text-sm leading-7 text-slate-600">{{ data.penyebab }}</p>
-              </article>
-              <article class="rounded-[1.5rem] bg-green-50 p-5">
-                <p class="text-sm font-bold text-emerald-700">Solusi dapur</p>
-                <p class="mt-2 text-sm leading-7 text-slate-600">{{ data.solusi_dapur }}</p>
-              </article>
-              <article class="rounded-[1.5rem] bg-green-50 p-5">
-                <p class="text-sm font-bold text-emerald-700">Solusi kimia</p>
-                <p class="mt-2 text-sm leading-7 text-slate-600">{{ data.solusi_kimia }}</p>
+
+              <!-- Solusi Kimia -->
+              <article class="rounded-2xl bg-teal-50/40 border border-teal-100 p-5 space-y-2 shadow-sm">
+                <p class="text-xs font-bold text-teal-800 uppercase tracking-wider flex items-center gap-1.5">
+                  🧪 <span>Solusi Kimia (Lanjutan)</span>
+                </p>
+                <p class="text-sm text-slate-700 leading-relaxed">{{ data.solusi_kimia }}</p>
               </article>
             </div>
             {% else %}
-            <p class="mt-4 text-sm text-slate-600">Belum ada data rekomendasi yang bisa ditampilkan.</p>
+            <p class="text-sm text-slate-500 py-4 text-center">Rekomendasi penanganan gagal dimuat.</p>
             {% endif %}
           </section>
 
-          <section class="rounded-[2rem] p-6">
-            <h2 class="text-xl font-bold">FAQ umum</h2>
-            <div class="mt-5 grid gap-4">
+          <!-- Interactive Q&A Accordion List (FAQ) -->
+          <section class="bg-white border border-slate-100 rounded-[2.5rem] p-6 md:p-8 shadow-sm space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+              <div>
+                <h2 class="text-xl font-bold text-slate-800">Tanya Jawab (FAQ) Lanjutan</h2>
+                <p class="text-xs text-slate-500 mt-1">Pilih pertanyaan terarah di bawah untuk informasi lebih mendalam dari AI.</p>
+              </div>
+              <!-- Real-time Filter/Search Input -->
+              <div class="relative w-full sm:w-64">
+                <input type="text" id="faq-search" placeholder="Cari pertanyaan..." class="w-full pl-10 pr-4 py-2.5 text-sm border border-slate-200 hover:border-slate-300 rounded-full focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all shadow-sm">
+                <span class="absolute left-3.5 top-3 text-slate-400">🔍</span>
+              </div>
+            </div>
+
+            <!-- Scrollable List of Questions (Sorted ASC in Python) -->
+            <div id="faq-list-container" class="space-y-3 max-h-[460px] overflow-y-auto pr-2">
               {% if faqs %}
                 {% for faq in faqs %}
-                <article class="rounded-[1.5rem] bg-green-50 p-5">
-                  {% if faq.category %}
-                  <p class="text-xs font-bold text-emerald-700" style="letter-spacing:0.15em;">{{ faq.category }}</p>
-                  {% endif %}
-                  <h3 class="mt-2 text-base font-bold">{{ faq.question }}</h3>
-                  <p class="mt-3 text-sm leading-7 text-slate-600">{{ faq.answer }}</p>
-                </article>
+                <div class="faq-item border border-slate-100 rounded-2xl overflow-hidden transition-all duration-300 bg-white" data-question="{{ faq }}">
+                  <button type="button" class="faq-trigger flex items-center justify-between w-full text-left font-bold text-slate-700 hover:text-emerald-700 px-5 py-4 focus:outline-none group bg-slate-50/50 hover:bg-emerald-50/20 transition-all duration-200">
+                    <span class="text-sm md:text-base pr-4 leading-normal">{{ faq }}</span>
+                    <!-- Down arrow symbol rotating on expand -->
+                    <span class="faq-icon text-slate-400 text-xs transform transition-transform duration-300 leading-none">▼</span>
+                  </button>
+                  <div class="faq-content hidden border-t border-slate-50 p-5 bg-emerald-50/20 text-sm leading-relaxed text-slate-600">
+                    <!-- Dynamic Loader -->
+                    <div class="faq-spinner hidden flex items-center gap-3 py-1">
+                      <div class="animate-spin rounded-full h-4 w-4 border-2 border-emerald-600 border-t-transparent shadow-glow"></div>
+                      <span class="text-xs text-slate-500 font-medium">AI sedang memproses jawaban detail...</span>
+                    </div>
+                    <!-- Answer content text -->
+                    <div class="faq-answer-text leading-relaxed text-slate-700 font-light"></div>
+                  </div>
+                </div>
                 {% endfor %}
               {% else %}
-              <p class="text-sm text-slate-600">FAQ belum tersedia.</p>
+              <p class="text-sm text-slate-400 py-6 text-center">FAQ belum tersedia.</p>
               {% endif %}
             </div>
           </section>
 
-          <section class="rounded-[2rem] p-6">
-            <h2 class="text-xl font-bold">Tanya AI lanjutan</h2>
-            <p class="mt-3 text-sm leading-7 text-slate-600">
-              Pertanyaan di bawah akan dikirim ke route `/ask_faq` dengan konteks kelas tanaman hasil prediksi dari backend yang sama.
-            </p>
-            <div class="mt-5 flex gap-4">
-              <input id="faq-question-input" type="text" placeholder="Contoh: bagaimana mencegah penyebaran penyakit ini?" class="rounded-full px-5 py-4">
-              <button id="faq-question-button" type="button" class="rounded-full bg-emerald-700 px-6 py-4">Kirim Pertanyaan</button>
-            </div>
-            <div id="faq-loading" class="hidden mt-5 rounded-[1.5rem] p-5">
-              <div class="flex items-center gap-4">
-                <div class="animate-spin" style="width:38px;height:38px;border-radius:999px;border:4px solid #bbf7d0;border-top-color:#15803d;"></div>
-                <p class="text-sm text-slate-600">AI sedang menyusun jawaban lanjutan.</p>
-              </div>
-            </div>
-            <div id="faq-answer" class="hidden mt-5 rounded-[1.5rem] bg-green-50 p-5 text-sm leading-7 text-slate-700"></div>
-            <div id="faq-error" class="hidden mt-5 rounded-[1.5rem] p-5 text-sm" style="background:#fff1f2;color:#be123c;"></div>
-          </section>
         </div>
-      </section>
+      </div>
     </main>
 
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-100 mt-12 py-8">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-xs md:text-sm text-slate-400 font-medium">
+        © 2026 Kampung Tani. Dikembangkan khusus untuk pemberdayaan Kelompok Wanita Tani (KWT).
+      </div>
+    </footer>
+
+    <!-- Configuration for JS injection -->
     <script>
       window.KAMPUNG_TANI_CONFIG = {
         askFaqUrl: "{{ url_for('ask_faq') }}",
         predictedClass: {{ predicted_class|tojson }}
       };
     </script>
+    <!-- Main Client Script -->
     <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
   </body>
 </html>

@@ -1,5 +1,6 @@
 import os
 import json
+import re
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 from werkzeug.utils import secure_filename
 from ultralytics import YOLO
@@ -24,15 +25,26 @@ app.config['MAX_CONTENT_LENGTH'] = int(os.environ.get("MAX_CONTENT_MB", 16)) * 1
 # Ensure upload folder exists
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
+# Helper to load JSONC by stripping comments
+def load_jsonc(filepath):
+    with open(filepath, 'r') as f:
+        content = f.read()
+    # Remove single-line comments
+    content = re.sub(r'//.*', '', content)
+    # Remove multi-line comments
+    content = re.sub(r'/\*.*?\*/', '', content, flags=re.DOTALL)
+    return json.loads(content)
+
 # Load FAQ and Prompt configurations (from .jsonc files)
 try:
-    with open('faq.jsonc', 'r') as f:
-        faq_list = json.load(f)
-    with open('prompt.jsonc', 'r') as f:
-        prompt_config = json.load(f)
-        faq_prompt = prompt_config['system_prompt']
-        healthy_prompt_template = prompt_config['healthy_prompt']
-        disease_prompt_template = prompt_config['disease_prompt']
+    faq_list = load_jsonc('faq.jsonc')
+    # Sort alphabetically in ascending order
+    faq_list = sorted(faq_list)
+    
+    prompt_config = load_jsonc('prompt.jsonc')
+    faq_prompt = prompt_config['system_prompt']
+    healthy_prompt_template = prompt_config['healthy_prompt']
+    disease_prompt_template = prompt_config['disease_prompt']
 except Exception as e:
     print(f"Warning: Could not load JSONC config - {e}")
     faq_list = []
@@ -105,17 +117,19 @@ def predict():
         if len(results) > 0 and len(results[0].boxes) > 0:
             # Assuming we take the first detected object (highest confidence usually)
             box = results[0].boxes[0]
+            confidence = float(box.conf[0].item())
             class_id = int(box.cls[0].item())
             predicted_class = model.names[class_id]
             
-            # Check if it's a chili class (ignore/exclude)
+            # Check if it's a chili class (ignore/exclude and redirect/render index with error)
             if "Chili" in predicted_class or "chili" in predicted_class.lower():
-                # For chili, we might want to return an error message
-                return render_template("result.html", 
-                                       image_url=filepath,
-                                       predicted_class="Tanaman Cabai tidak didukung",
-                                       error="Sistem ini difokuskan pada Terong, Kentang, dan Tomat.",
-                                       data=None)
+                return render_template("index.html", 
+                                       error="Tanaman Cabai tidak didukung. Harap unggah gambar Terong, Kentang, atau Tomat.")
+            
+            # Check if confidence score is below 50%
+            if confidence < 0.50:
+                return render_template("index.html", 
+                                       error="Gambar kurang pas. Harap ambil foto daun/tanaman dengan lebih jelas dan fokus.")
                                        
             # Get LLM Recommendation
             data = get_llm_recommendation(predicted_class)
@@ -126,11 +140,8 @@ def predict():
                                    data=data,
                                    faqs=faq_list)
         else:
-            return render_template("result.html", 
-                                   image_url=filepath,
-                                   predicted_class="Tidak terdeteksi",
-                                   error="YOLO tidak mendeteksi penyakit/tanaman pada gambar ini.",
-                                   data=None)
+            return render_template("index.html", 
+                                   error="Gambar kurang pas. YOLO tidak mendeteksi penyakit/tanaman pada gambar ini. Silakan coba lagi.")
                                    
     return redirect(url_for('index'))
 
