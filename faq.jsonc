@@ -1,0 +1,47 @@
+[
+  {
+    "category": "Eggplant",
+    "question": "Bagaimana cara menyiram terong agar daun tidak mudah terserang penyakit?",
+    "answer": "Siram langsung ke media tanam pada pagi hari, hindari membasahi daun di sore atau malam, dan pastikan drainase tidak tergenang."
+  },
+  {
+    "category": "Eggplant",
+    "question": "Kapan daun terong yang rusak perlu dipangkas?",
+    "answer": "Pangkas bila bercak sudah meluas lebih dari sepertiga permukaan daun atau daun mulai menguning dan menjadi sumber infeksi."
+  },
+  {
+    "category": "Eggplant",
+    "question": "Apa pupuk dasar yang baik untuk terong di lahan sempit?",
+    "answer": "Gunakan kompos matang ditambah NPK seimbang dosis ringan berkala, lalu tingkatkan kalium saat fase pembungaan dan pembuahan."
+  },
+  {
+    "category": "Potato",
+    "question": "Bagaimana mencegah umbi kentang mudah busuk di musim hujan?",
+    "answer": "Gunakan media gembur, guludan cukup tinggi, mulsa bila perlu, dan pastikan air tidak menggenang terlalu lama."
+  },
+  {
+    "category": "Potato",
+    "question": "Seberapa sering kentang perlu dipantau dari gejala hawar daun?",
+    "answer": "Pantau minimal dua sampai tiga kali seminggu, terutama setelah hujan, kabut tebal, atau kelembapan tinggi."
+  },
+  {
+    "category": "Potato",
+    "question": "Apa tanda awal daun kentang sehat mulai bermasalah?",
+    "answer": "Perhatikan bercak kecil cokelat, tepi daun menghitam, layu mendadak, atau pertumbuhan yang tampak tertahan."
+  },
+  {
+    "category": "Tomato",
+    "question": "Bagaimana mencegah tomat mudah terkena penyakit daun saat cuaca lembap?",
+    "answer": "Atur sirkulasi udara, lakukan ajir dan pemangkasan tunas berlebih, lalu siram media tanam tanpa membasahi daun."
+  },
+  {
+    "category": "Tomato",
+    "question": "Kapan buah tomat yang bercak perlu segera dipetik?",
+    "answer": "Petik dan pisahkan bila bercak cepat melebar, buah mulai lunak, atau ada tanda busuk yang dapat menular ke buah lain."
+  },
+  {
+    "category": "Tomato",
+    "question": "Apa perawatan rutin agar tomat tetap produktif di halaman rumah?",
+    "answer": "Berikan pupuk seimbang berkala, tambah kalsium dan kalium saat berbuah, ikat batang dengan rapi, dan cek hama setiap hari."
+  }
+]

@@ -1,0 +1,14 @@
+{
+  "name": "kampung-tani",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Kampung Tani Flask frontend assets with local Tailwind CSS compilation.",
+  "scripts": {
+    "build:css": "tailwindcss -i ./static/src/input.css -o ./static/css/output.css --minify",
+    "watch:css": "tailwindcss -i ./static/src/input.css -o ./static/css/output.css --watch",
+    "dev": "npm run watch:css"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.17"
+  }
+}

@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  }
+}
+
+@layer components {
+  .prose h1,
+  .prose h2,
+  .prose h3 {
+    @apply mt-6 text-slate-900 font-bold;
+  }
+
+  .prose h1 {
+    @apply text-2xl;
+  }
+
+  .prose h2 {
+    @apply text-xl;
+  }
+
+  .prose h3 {
+    @apply text-lg;
+  }
+
+  .prose p {
+    @apply mt-3 leading-7 text-slate-600;
+  }
+
+  .prose ul {
+    @apply mt-4 list-disc space-y-2 pl-6 text-slate-600;
+  }
+
+  .prose li {
+    @apply leading-7;
+  }
+}

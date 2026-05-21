@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hasil Analisis | Kampung Tani</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css') }}">
+  </head>
+  <body>
+    <header>
+      <div class="flex items-center justify-between gap-4">
+        <a href="{{ url_for('index') }}" class="flex items-center gap-3">
+          <span class="inline-flex rounded-full bg-emerald-700 px-4 py-3 shadow-glow" style="color:#fff;font-weight:800;">KT</span>
+          <div>
+            <div class="text-sm font-bold text-emerald-700">Kampung Tani</div>
+            <div class="text-sm text-slate-600">Ringkasan analisis tanaman</div>
+          </div>
+        </a>
+        <a href="{{ url_for('index') }}" class="rounded-full border px-5 py-3">Analisis Ulang</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
+        <div class="rounded-[2rem] p-6">
+          <p class="text-sm font-bold text-emerald-700" style="letter-spacing:0.2em;">HASIL PREDIKSI</p>
+          <h1 class="mt-3 text-3xl font-bold">{{ predicted_class }}</h1>
+          {% if image_url %}
+          <div class="mt-5 rounded-[1.5rem] bg-green-50 p-4">
+            <img src="{{ image_url }}" alt="Foto tanaman yang dianalisis" class="h-72 w-full object-cover">
+          </div>
+          {% endif %}
+          {% if error %}
+          <div class="mt-5 rounded-[1.5rem] p-5" style="background:#fff1f2;color:#be123c;">
+            <p class="font-bold">Analisis belum menghasilkan rekomendasi</p>
+            <p class="mt-2 text-sm">{{ error }}</p>
+          </div>
+          {% endif %}
+        </div>
+
+        <div class="grid gap-6">
+          <section class="rounded-[2rem] p-6">
+            <h2 class="text-xl font-bold">Diagnosa dan rekomendasi</h2>
+            {% if data %}
+            <div class="mt-5 grid gap-4">
+              <article class="rounded-[1.5rem] bg-green-50 p-5">
+                <p class="text-sm font-bold text-emerald-700">Status</p>
+                <p class="mt-2 text-base text-slate-800">{{ data.status }}</p>
+              </article>
+              <article class="rounded-[1.5rem] bg-green-50 p-5">
+                <p class="text-sm font-bold text-emerald-700">Penyakit atau kondisi</p>
+                <p class="mt-2 text-base text-slate-800">{{ data.penyakit }}</p>
+              </article>
+              <article class="rounded-[1.5rem] bg-green-50 p-5">
+                <p class="text-sm font-bold text-emerald-700">Penyebab</p>
+                <p class="mt-2 text-sm leading-7 text-slate-600">{{ data.penyebab }}</p>
+              </article>
+              <article class="rounded-[1.5rem] bg-green-50 p-5">
+                <p class="text-sm font-bold text-emerald-700">Solusi dapur</p>
+                <p class="mt-2 text-sm leading-7 text-slate-600">{{ data.solusi_dapur }}</p>
+              </article>
+              <article class="rounded-[1.5rem] bg-green-50 p-5">
+                <p class="text-sm font-bold text-emerald-700">Solusi kimia</p>
+                <p class="mt-2 text-sm leading-7 text-slate-600">{{ data.solusi_kimia }}</p>
+              </article>
+            </div>
+            {% else %}
+            <p class="mt-4 text-sm text-slate-600">Belum ada data rekomendasi yang bisa ditampilkan.</p>
+            {% endif %}
+          </section>
+
+          <section class="rounded-[2rem] p-6">
+            <h2 class="text-xl font-bold">FAQ umum</h2>
+            <div class="mt-5 grid gap-4">
+              {% if faqs %}
+                {% for faq in faqs %}
+                <article class="rounded-[1.5rem] bg-green-50 p-5">
+                  {% if faq.category %}
+                  <p class="text-xs font-bold text-emerald-700" style="letter-spacing:0.15em;">{{ faq.category }}</p>
+                  {% endif %}
+                  <h3 class="mt-2 text-base font-bold">{{ faq.question }}</h3>
+                  <p class="mt-3 text-sm leading-7 text-slate-600">{{ faq.answer }}</p>
+                </article>
+                {% endfor %}
+              {% else %}
+              <p class="text-sm text-slate-600">FAQ belum tersedia.</p>
+              {% endif %}
+            </div>
+          </section>
+
+          <section class="rounded-[2rem] p-6">
+            <h2 class="text-xl font-bold">Tanya AI lanjutan</h2>
+            <p class="mt-3 text-sm leading-7 text-slate-600">
+              Pertanyaan di bawah akan dikirim ke route `/ask_faq` dengan konteks kelas tanaman hasil prediksi dari backend yang sama.
+            </p>
+            <div class="mt-5 flex gap-4">
+              <input id="faq-question-input" type="text" placeholder="Contoh: bagaimana mencegah penyebaran penyakit ini?" class="rounded-full px-5 py-4">
+              <button id="faq-question-button" type="button" class="rounded-full bg-emerald-700 px-6 py-4">Kirim Pertanyaan</button>
+            </div>
+            <div id="faq-loading" class="hidden mt-5 rounded-[1.5rem] p-5">
+              <div class="flex items-center gap-4">
+                <div class="animate-spin" style="width:38px;height:38px;border-radius:999px;border:4px solid #bbf7d0;border-top-color:#15803d;"></div>
+                <p class="text-sm text-slate-600">AI sedang menyusun jawaban lanjutan.</p>
+              </div>
+            </div>
+            <div id="faq-answer" class="hidden mt-5 rounded-[1.5rem] bg-green-50 p-5 text-sm leading-7 text-slate-700"></div>
+            <div id="faq-error" class="hidden mt-5 rounded-[1.5rem] p-5 text-sm" style="background:#fff1f2;color:#be123c;"></div>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      window.KAMPUNG_TANI_CONFIG = {
+        askFaqUrl: "{{ url_for('ask_faq') }}",
+        predictedClass: {{ predicted_class|tojson }}
+      };
+    </script>
+    <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+  </body>
+</html>
