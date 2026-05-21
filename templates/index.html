@@ -1,248 +1,79 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Kampung Tani | Deteksi Penyakit Tanaman</title>
-    <!-- Google Fonts Outfit -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css') }}">
-    <style>
-      body {
-        font-family: 'Outfit', sans-serif;
-      }
-      .custom-blur {
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-      }
-      .animate-fade-in {
-        animation: fadeIn 0.4s ease-out forwards;
-      }
-      @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
-      }
-    </style>
-  </head>
-  <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
-    <!-- Premium Header / Sticky Navbar -->
-    <header class="sticky top-0 z-50 w-full bg-white/80 custom-blur border-b border-slate-100 transition-all duration-300">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
-        <a href="{{ url_for('index') }}" class="flex items-center gap-3 group">
-          <div class="h-12 w-12 rounded-2xl bg-gradient-to-br from-emerald-600 to-emerald-800 flex items-center justify-center shadow-md group-hover:scale-105 transition-transform duration-300">
-            <!-- Modern Leaf SVG Icon -->
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-white">
-              <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 3.5 1 9.8a7 7 0 0 1-9 8.2Z"/>
-              <path d="M9 22v-4h4"/>
-            </svg>
-          </div>
-          <div>
-            <div class="text-lg font-extrabold text-emerald-800 tracking-tight leading-none">Kampung Tani</div>
-            <div class="text-xs text-slate-500 font-medium mt-1">AI Urban Farming Assistant</div>
-          </div>
-        </a>
-        <a href="#upload-section" class="hidden sm:inline-flex items-center justify-center px-6 py-3 rounded-full bg-emerald-700 hover:bg-emerald-800 text-white font-semibold shadow-md shadow-emerald-700/10 hover:shadow-emerald-700/20 active:scale-95 transition-all duration-200">
-          Mulai Analisis
-        </a>
-      </div>
-    </header>
 
-    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 space-y-12 md:space-y-16">
-      
-      <!-- Hero Section -->
-      <section class="relative rounded-[2.5rem] overflow-hidden bg-gradient-to-br from-emerald-800 via-emerald-900 to-teal-950 text-white shadow-glow p-8 md:p-12 lg:p-16">
-        <!-- Grid pattern overlay -->
-        <div class="absolute inset-0 bg-hero-grid opacity-10 pointer-events-none"></div>
-        <div class="relative z-10 max-w-3xl space-y-6">
-          <span class="inline-flex items-center px-4 py-1.5 rounded-full bg-white/10 custom-blur text-xs font-bold uppercase tracking-widest text-emerald-200 border border-white/10">
-            🌱 Agritech AI Assistant
-          </span>
-          <h1 class="text-4xl md:text-5xl lg:text-6xl font-black leading-tight tracking-tight">
-            Analisis Penyakit Tanaman dalam Hitungan Detik.
-          </h1>
-          <p class="text-base md:text-lg text-emerald-100/90 leading-relaxed max-w-2xl font-light">
-            Kampung Tani membantu petani urban mengenali gejala visual penyakit pada daun terong, kentang, dan tomat secara cepat, lengkap dengan solusi alami maupun kimiawi yang direkomendasikan AI.
-          </p>
-          <div class="pt-4 flex flex-wrap gap-4">
-            <a href="#upload-section" class="px-8 py-4 rounded-full bg-white text-emerald-800 font-bold shadow-lg hover:bg-emerald-50 active:scale-95 transition-all">
-              Unggah Gambar
-            </a>
-            <a href="#panduan-section" class="px-8 py-4 rounded-full border border-white/30 hover:border-white/60 hover:bg-white/5 font-semibold active:scale-95 transition-all">
-              Lihat Panduan
-            </a>
-          </div>
-        </div>
-      </section>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kampung Tani – Deteksi Penyakit</title>
+    <link rel="stylesheet" href="static/css/style.css" />
+</head>
 
-      <!-- Supported Crops Grid -->
-      <section class="space-y-6">
-        <div class="text-center max-w-xl mx-auto space-y-2">
-          <h2 class="text-2xl md:text-3xl font-extrabold text-slate-800 tracking-tight">Tanaman yang Didukung</h2>
-          <p class="text-sm md:text-base text-slate-500">Sistem ini dioptimalkan khusus untuk mengidentifikasi penyakit pada komoditas berikut:</p>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <article class="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
-            <div class="space-y-3">
-              <span class="inline-flex items-center justify-center h-12 w-12 rounded-2xl bg-purple-50 text-purple-700 text-xl font-bold">🍆</span>
-              <h3 class="text-lg font-bold text-slate-800">Terong (Eggplant)</h3>
-              <p class="text-sm text-slate-500 leading-relaxed">Mendeteksi bintik daun Cercospora, laba-laba merah, tungau daun, dan kondisi sehat.</p>
-            </div>
-            <div class="mt-4 pt-4 border-t border-slate-50 text-xs text-emerald-600 font-bold">AKURAT DENGAN YOLO</div>
-          </article>
-          <article class="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
-            <div class="space-y-3">
-              <span class="inline-flex items-center justify-center h-12 w-12 rounded-2xl bg-amber-50 text-amber-700 text-xl font-bold">🥔</span>
-              <h3 class="text-lg font-bold text-slate-800">Kentang (Potato)</h3>
-              <p class="text-sm text-slate-500 leading-relaxed">Mendeteksi busuk daun awal (Early Blight), busuk daun akhir (Late Blight), dan daun sehat.</p>
-            </div>
-            <div class="mt-4 pt-4 border-t border-slate-50 text-xs text-emerald-600 font-bold">DIAGNOSIS LLM AKURAT</div>
-          </article>
-          <article class="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
-            <div class="space-y-3">
-              <span class="inline-flex items-center justify-center h-12 w-12 rounded-2xl bg-red-50 text-red-700 text-xl font-bold">🍅</span>
-              <h3 class="text-lg font-bold text-slate-800">Tomat (Tomato)</h3>
-              <p class="text-sm text-slate-500 leading-relaxed">Mendeteksi bercak bakteri, busuk daun, nematoda, mosaik, bercak daun Septoria, tungau, dan kondisi sehat.</p>
-            </div>
-            <div class="mt-4 pt-4 border-t border-slate-50 text-xs text-emerald-600 font-bold">ANALISIS LENGKAP</div>
-          </article>
-        </div>
-      </section>
+<body>
 
-      <!-- Upload Form Section -->
-      <section id="upload-section" class="scroll-mt-24 bg-white border border-slate-100 rounded-[2.5rem] p-6 md:p-10 shadow-sm">
-        <div class="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-8 md:gap-12 items-center">
-          <!-- Form Info Left -->
-          <div class="space-y-6">
-            <span class="text-xs font-bold text-emerald-700 uppercase tracking-wider block">Upload & Analyze</span>
-            <h2 class="text-3xl font-extrabold text-slate-800 tracking-tight leading-tight">Unggah foto daun atau buah tanaman untuk dianalisis.</h2>
-            <p class="text-sm md:text-base text-slate-500 leading-relaxed">
-              Formulir di sebelah kanan terintegrasi secara dinamis dengan model visi YOLO untuk mendeteksi penyakit daun dan asisten AI lokal LLM untuk menyusun panduan pengobatan yang praktis bagi Anda.
-            </p>
-            <!-- Custom Dynamic Error Alert -->
-            {% if error %}
-            <div class="rounded-2xl p-4 bg-rose-50 border border-rose-200 text-rose-800 animate-fade-in space-y-2">
-              <div class="flex items-center gap-3">
-                <span class="text-xl">⚠️</span>
-                <div>
-                  <p class="font-bold text-rose-900">Deteksi Bermasalah</p>
-                  <p class="text-sm text-rose-800 mt-0.5">{{ error }}</p>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <div class="brand-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" />
+                    <path d="M8 12s1.5 2 4 2 4-2 4-2" />
+                    <line x1="9" y1="9" x2="9.01" y2="9" />
+                    <line x1="15" y1="9" x2="15.01" y2="9" />
+                </svg>
+            </div>
+            <div>
+                <div class="brand-name">Kampung Tani</div>
+                <div class="brand-status">Online | Siap membantu</div>
+            </div>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#" class="nav-link active">Home</a></li>
+            <li><a href="#" class="nav-link">Profile</a></li>
+            <li><a href="#" class="nav-link">Deteksi Penyakit</a></li>
+        </ul>
+    </nav>
+
+    <!-- Chat area -->
+    <main class="chat-main">
+        <div class="chat-window">
+
+            <div class="message-list" id="messageList">
+                <div class="msg-row bot">
+                    <div class="bot-avatar">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10" />
+                            <path d="M8 12s1.5 2 4 2 4-2 4-2" />
+                            <line x1="9" y1="9" x2="9.01" y2="9" />
+                            <line x1="15" y1="9" x2="15.01" y2="9" />
+                        </svg>
+                    </div>
+                    <div class="bubble bot-bubble">
+                        Halo! Saya asisten AI Deteksi Penyakit. Silakan upload foto tanaman Anda yang terlihat kurang
+                        sehat. Saya akan menganalisanya untuk Anda.
+                    </div>
                 </div>
-              </div>
-            </div>
-            {% endif %}
-            
-            <div class="space-y-4">
-              <h4 class="text-sm font-bold text-slate-700 uppercase tracking-wider">Tips Foto Terbaik:</h4>
-              <ul class="space-y-2 text-sm text-slate-500">
-                <li class="flex items-start gap-2.5">
-                  <span class="text-emerald-500 mt-0.5">✔</span>
-                  <span>Ambil gambar pada area yang terkena gejala dengan cahaya yang cukup.</span>
-                </li>
-                <li class="flex items-start gap-2.5">
-                  <span class="text-emerald-500 mt-0.5">✔</span>
-                  <span>Pastikan foto berfokus tajam pada satu daun atau buah yang bermasalah.</span>
-                </li>
-                <li class="flex items-start gap-2.5">
-                  <span class="text-rose-500 mt-0.5">✘</span>
-                  <span>Hindari mengunggah daun cabai, karena sistem akan menolak otomatis.</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <!-- Interactive Form Right -->
-          <form id="prediction-form" action="{{ url_for('predict') }}" method="post" enctype="multipart/form-data" class="rounded-3xl bg-emerald-50/50 border border-emerald-100 p-6 md:p-8 space-y-6">
-            <!-- Hidden Single File Input -->
-            <input id="file-input" name="file" type="file" accept=".jpg,.jpeg,.png,.webp,image/*" required class="hidden">
-            
-            <!-- Custom Drop Zone Container -->
-            <div id="drop-zone" class="border-2 border-dashed border-emerald-300 hover:border-emerald-500 rounded-2xl p-8 text-center transition-all bg-white cursor-pointer group shadow-sm flex flex-col items-center justify-center min-h-[220px]">
-              <div class="h-16 w-16 rounded-full bg-emerald-50 text-emerald-700 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 text-2xl shadow-sm">
-                📂
-              </div>
-              <h3 class="mt-4 text-lg font-bold text-slate-800">Tarik foto ke sini atau pilih berkas</h3>
-              <p class="mt-2 text-xs text-slate-500 max-w-sm">Mendukung format gambar JPEG, PNG, atau WEBP. Maksimal ukuran berkas 16MB.</p>
             </div>
 
-            <!-- Mobile-friendly Actions (Camera & Gallery) -->
-            <div class="flex flex-col sm:flex-row gap-4">
-              <button type="button" id="btn-gallery" class="flex-1 flex items-center justify-center gap-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 hover:border-slate-300 px-6 py-4 rounded-xl font-bold transition-all shadow-sm active:scale-95">
-                📁 Pilih Galeri
-              </button>
-              <button type="button" id="btn-camera" class="flex-1 flex items-center justify-center gap-2 bg-emerald-700 hover:bg-emerald-800 text-white px-6 py-4 rounded-xl font-bold transition-all shadow-md shadow-emerald-700/10 hover:shadow-emerald-700/20 active:scale-95">
-                📷 Ambil Kamera
-              </button>
-            </div>
-
-            <!-- Preview Selected Image Wrapper -->
-            <div id="preview-wrapper" class="hidden rounded-2xl bg-white border border-slate-100 p-4 shadow-sm space-y-3 animate-fade-in">
-              <div class="relative rounded-xl overflow-hidden aspect-video bg-slate-50">
-                <img id="preview-image" alt="Pratinjau gambar tanaman" class="w-full h-full object-cover">
-              </div>
-              <div class="flex items-center justify-between gap-3">
-                <p id="preview-name" class="text-xs font-semibold text-slate-500 truncate max-w-[70%]"></p>
-                <button id="reset-button" type="button" class="text-xs font-bold text-rose-600 hover:text-rose-700 hover:underline">Hapus Foto</button>
-              </div>
-            </div>
-
-            <!-- Submit Aksi -->
-            <div class="pt-2">
-              <button id="submit-button" type="submit" class="w-full flex items-center justify-center px-6 py-4 rounded-xl bg-emerald-700 hover:bg-emerald-800 disabled:bg-slate-300 disabled:cursor-not-allowed text-white font-bold transition-all shadow-md shadow-emerald-700/10 hover:shadow-emerald-700/20">
-                Analisis Gambar Sekarang
-              </button>
-            </div>
-
-            <!-- Loading overlay inside form -->
-            <div id="loading-box" class="hidden rounded-2xl bg-emerald-900 text-white p-6 shadow-lg animate-fade-in space-y-4">
-              <div class="flex items-center gap-4">
-                <div class="animate-spin rounded-full h-10 w-10 border-4 border-emerald-500 border-t-transparent shadow-glow"></div>
-                <div>
-                  <p class="font-extrabold text-base">Sedang Menganalisis...</p>
-                  <p class="text-xs text-emerald-200 mt-1">Sistem sedang memproses visi YOLO dan menyusun solusi AI. Harap tunggu sebentar.</p>
+            <!-- Upload zone -->
+            <div class="upload-zone" id="uploadZone">
+                <input type="file" id="fileInput" accept="image/*" class="file-hidden" />
+                <div class="upload-icon-wrap">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+                        <circle cx="12" cy="13" r="4" />
+                    </svg>
                 </div>
-              </div>
+                <p class="upload-title">Upload foto tanaman</p>
+                <p class="upload-sub">Klik atau tarik foto ke sini untuk mengecek kondisinya</p>
             </div>
-          </form>
-        </div>
-      </section>
 
-      <!-- Panduan Perawatan Kebun -->
-      <section id="panduan-section" class="scroll-mt-24 space-y-6">
-        <div class="text-center max-w-xl mx-auto space-y-2">
-          <h2 class="text-2xl md:text-3xl font-extrabold text-slate-800 tracking-tight">Panduan Cepat Sanitasi Kebun</h2>
-          <p class="text-sm md:text-base text-slate-500">Langkah mitigasi harian untuk menjaga kesehatan tanaman di area urban farming:</p>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div class="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm">
-            <span class="text-2xl">🧹</span>
-            <h3 class="text-lg font-bold text-slate-800 mt-4">1. Sanitasi Kebun</h3>
-            <p class="text-sm text-slate-500 mt-2 leading-relaxed">Pisahkan atau pangkas segera daun dan buah yang terinfeksi berat agar spora jamur/bakteri tidak meluas ke area sekitarnya.</p>
-          </div>
-          <div class="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm">
-            <span class="text-2xl">💨</span>
-            <h3 class="text-lg font-bold text-slate-800 mt-4">2. Sirkulasi Udara</h3>
-            <p class="text-sm text-slate-500 mt-2 leading-relaxed">Atur jarak tanam antar polibeg dan pangkas tajuk yang terlalu lebat untuk mengurangi kelembapan tinggi yang disukai parasit.</p>
-          </div>
-          <div class="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm">
-            <span class="text-2xl">👁</span>
-            <h3 class="text-lg font-bold text-slate-800 mt-4">3. Monitoring Rutin</h3>
-            <p class="text-sm text-slate-500 mt-2 leading-relaxed">Gunakan Kampung Tani secara teratur saat melihat perubahan warna sekecil apapun pada daun untuk penanganan sejak dini.</p>
-          </div>
-        </div>
-      </section>
-
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-white border-t border-slate-100 mt-12 py-8">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-xs md:text-sm text-slate-400 font-medium">
-        © 2026 Kampung Tani. Dikembangkan khusus untuk pemberdayaan Kelompok Wanita Tani (KWT).
-      </div>
-    </footer>
+    <script src="script.js"></script>
+</body>
 
-    <!-- Main Client Script -->
-    <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
-  </body>
 </html>

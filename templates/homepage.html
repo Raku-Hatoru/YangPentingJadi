@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kampung Tani - Deteksi Penyakit Tanaman</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Lora:ital,wght@0,400;0,600;0,700;1,400&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+
+<body>
+
+  <!-- ========== NAVBAR ========== -->
+  <nav class="navbar">
+    <div class="container navbar__inner">
+      <a href="#home" class="navbar__brand">
+        <span class="navbar__logo-icon" aria-hidden="true">
+          <img src="{{ url_for('static', filename='images/Kampung Tani Logo.png') }}">
+        </span>
+        <span class="navbar__brand-text">Kampung Tani</span>
+      </a>
+      <button class="navbar__toggle" id="navToggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="navbar__menu" id="navMenu">
+        <li><a href="#home" class="navbar__link">Home</a></li>
+        <li><a href="#about" class="navbar__link">Profile</a></li>
+        <li><a href="{{ url_for('deteksi') }}" class="navbar__link">Deteksi Penyakit</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ========== HERO ========== -->
+  <section class="hero" id="home">
+    <div class="container hero__inner">
+      <div class="hero__content">
+        <h1 class="hero__title">Selamat Datang<br />di Kampung Tani</h1>
+        <p class="hero__subtitle">Deteksi Cepat Gejala Penyakit, Solusi Tepat untuk Tanaman Rumah Sahabat Terbaik Urban
+          Farming Anda.</p>
+        <a href="{{ url_for('deteksi') }}" class="btn btn--primary">
+          <svg class="btn__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          Cek Kondisi<br />Tanaman
+        </a>
+      </div>
+      <div class="hero__image-wrap">
+        <img src="{{ url_for('static', filename='images/Kampung Tani Ilustrasi1.jpeg') }}"
+          alt="Tanaman hijau segar dalam pot" class="hero__image" />
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== ABOUT ========== -->
+  <section class="about" id="about">
+    <div class="container about__inner">
+      <div class="about__image-wrap">
+        <img src="{{ url_for('static', filename='images/Kampung Tani Ilustrasi2.png') }}"
+          alt="Bibit tanaman urban farming" class="about__image" />
+      </div>
+      <div class="about__content">
+        <h2 class="about__title">Apa Itu Kampung Tani?</h2>
+        <p class="about__text">Dalam upaya mewujudkan kemandirian pangan rumah tangga, perempuan menjadi penggerak utama
+          urban farming melalui budidaya tomat, terong, dan kentang di lingkungan perkotaan. Namun, keterbatasan
+          pengetahuan dalam mendeteksi penyakit tanaman sejak dini masih menjadi tantangan utama yang sering menyebabkan
+          penurunan hasil panen.</p>
+        <p class="about__text">Melalui perkembangan teknologi, proses identifikasi penyakit tanaman kini dapat dilakukan
+          lebih cepat dan praktis dengan bantuan Artificial Intelligence (AI). KAMPUNG TANI hadir sebagai inovasi
+          komunitas penggerak urban farming dengan teknologi AI untuk mendeteksi penyakit tanaman secara presisi dan
+          taksonomis.</p>
+        <p class="about__text">Yuk, kenali lebih jauh bagaimana KAMPUNG TANI membantu perempuan tani perkotaan
+          menciptakan pertanian rumah tangga yang lebih cerdas, mandiri, dan berkelanjutan.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== IMPORTANCE (DARK) ========== -->
+  <section class="importance">
+    <div class="container importance__inner">
+      <h2 class="importance__title">Pentingnya analisis penyakit pada tanaman</h2>
+      <p class="importance__text">Selama ini, komunitas wanita tani umumnya melakukan analisis penyakit tanaman secara
+        offline dengan mendatangi penyuluh pertanian di desa. Namun, perkembangan teknologi kini memungkinkan proses
+        pendeteksian penyakit tanaman dilakukan secara online dengan lebih cepat dan praktis.</p>
+      <p class="importance__text">Analisa penyakit tanaman secara online memiliki berbagai keunggulan yang sangat
+        membantu perempuan penggerak urban farming.</p>
+    </div>
+    <div class="importance__deco importance__deco--left" aria-hidden="true"></div>
+    <div class="importance__deco importance__deco--right" aria-hidden="true"></div>
+  </section>
+
+  <!-- ========== WHY SECTION ========== -->
+  <section class="why" id="detect">
+    <div class="container why__inner">
+      <h2 class="why__title">Mengapa Harus Deteksi Penyakit dengan Kampung Tani?</h2>
+      <p class="why__subtitle">Kampung Tani hadir sebagai asisten intelejen buatan yang dapat memetakan pola penyakit
+        tanaman dalam satu varietas tanaman. Disini kami hadir dengan hasil analisis yang cepat dan solusi akurat.</p>
+      <div class="why__cards">
+        <article class="why-card">
+          <div class="why-card__icon-wrap" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect x="5" y="2" width="14" height="20" rx="2" />
+              <line x1="12" y1="18" x2="12" y2="18" />
+            </svg>
+          </div>
+          <h3 class="why-card__title">Kemudahan akses pengguna</h3>
+          <p class="why-card__text">layanan ini mudah diakses hanya dengan menggunakan smartphone dan koneksi internet.
+            Kelompok wanita tani dapat melakukan pengecekan kondisi tanaman kapan saja dan di mana saja tanpa harus
+            menunggu jadwal konsultasi dengan penyuluh pertanian.</p>
+        </article>
+        <article class="why-card">
+          <div class="why-card__icon-wrap" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+              stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <polyline points="12 6 12 12 16 14" />
+            </svg>
+          </div>
+          <h3 class="why-card__title">Deteksi cepat</h3>
+          <p class="why-card__text">teknologi Artificial Intelligence (AI) mampu memberikan hasil analisis yang cepat,
+            akurat, dan presisi. Melalui sistem identifikasi berbasis gambar, AI dapat mendeteksi berbagai jenis
+            penyakit tanaman seperti penyakit jamur (fungi & oomycete), bakteri, virus, hingga serangan nematoda pada
+            tanaman tomat, terong, maupun kentang.</p>
+        </article>
+        <article class="why-card">
+          <div class="why-card__icon-wrap" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+              <polyline points="22 4 12 14.01 9 11.01" />
+            </svg>
+          </div>
+          <h3 class="why-card__title">Solusi Akurat</h3>
+          <p class="why-card__text">sistem AI tidak hanya mendeteksi penyakit, tetapi juga memberikan rekomendasi
+            penanganan dan perawatan tanaman yang sesuai dengan kondisi tanaman pengguna. Hal ini membantu wanita tani
+            menentukan langkah penanganan yang lebih efektif untuk mencegah kerusakan tanaman dan menurunkan risiko
+            gagal panen.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== AI FEATURE (DARK) ========== -->
+  <section class="ai-feature">
+    <div class="container ai-feature__inner">
+      <h2 class="ai-feature__title">Cek Kondisi Tanaman dengan AI</h2>
+      <p class="ai-feature__text">Khawatir tanaman Anda layu atau daunnya menguning? Ambil foto dan biar AI kami yang
+        mendiagnosa masalahnya secara instan.</p>
+      <a href="{{ url_for('deteksi') }}" class="btn btn--olive">Mulai Diagnosa Sekarang</a>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div class="footer__brand-col">
+        <a href="#" class="footer__brand">
+          Kampung Tani
+        </a>
+        <p class="footer__tagline">Teman bertanam cerdas untuk gaya hidup urban yang sehat dan berkelanjutan.</p>
+      </div>
+      <div class="footer__nav-col">
+        <h4 class="footer__col-title">Navigasi</h4>
+        <ul class="footer__links">
+          <li><a href="{{ url_for('index') }}#home">Home</a></li>
+          <li><a href="{{ url_for('index') }}#about">Profile</a></li>
+          <li><a href="{{ url_for('deteksi') }}">Deteksi Penyakit</a></li>
+        </ul>
+      </div>
+
+      <div class="footer__nav-col">
+        <h4 class="footer__col-title">Ikuti Kami</h4>
+        <div class="footer__socials">
+          <a href="#" class="footer__social-link" aria-label="Website">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="2" y1="12" x2="22" y2="12" />
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+            </svg>
+          </a>
+          <a href="#" class="footer__social-link" aria-label="Share">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="18" cy="5" r="3" />
+              <circle cx="6" cy="12" r="3" />
+              <circle cx="18" cy="19" r="3" />
+              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+              <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+            </svg>
+          </a>
+          <a href="#" class="footer__social-link" aria-label="Email">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+              <polyline points="22,6 12,13 2,6" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <p>© 2026 Kampung Tani · Temani Berkebun Anda</p>
+    </div>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+
+</html>

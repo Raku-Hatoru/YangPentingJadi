@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hasil Analisis | Kampung Tani</title>
+  <!-- Google Fonts Outfit & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Lora:wght@400;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css') }}">
+  <style>
+    body {
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .custom-blur {
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+  </style>
+</head>
+
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+  <!-- ========== NAVBAR ========== -->
+  <nav class="navbar">
+    <div class="container navbar__inner">
+      <a href="{{ url_for('index') }}" class="navbar__brand">
+        <span class="navbar__logo-icon" aria-hidden="true">
+          <img src="{{ url_for('static', filename='images/Kampung Tani Logo.png') }}">
+        </span>
+        <span class="navbar__brand-text">Kampung Tani</span>
+      </a>
+      <button class="navbar__toggle" id="navToggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="navbar__menu" id="navMenu">
+        <li><a href="{{ url_for('index') }}#home" class="navbar__link">Home</a></li>
+        <li><a href="{{ url_for('index') }}#about" class="navbar__link">Profile</a></li>
+        <li><a href="{{ url_for('deteksi') }}" class="navbar__link navbar__link--active">Deteksi Penyakit</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+    <div class="grid grid-cols-1 lg:grid-cols-[0.85fr_1.15fr] gap-8 md:gap-12 items-start">
+
+      <!-- Left Side: Image and Basic Detection result -->
+      <div class="bg-white border border-slate-100 rounded-[2rem] p-6 shadow-sm space-y-6 lg:sticky lg:top-28">
+        <div class="space-y-1">
+          <span class="text-xs font-bold text-emerald-700 uppercase tracking-wider block">Hasil Deteksi YOLO</span>
+          <h1 class="text-2xl md:text-3xl font-extrabold text-slate-800 tracking-tight leading-tight">
+            {% if data and data.status == "Sehat" %}
+            <span class="text-emerald-700">🟢 {{ predicted_class }}</span>
+            {% else %}
+            <span class="text-amber-600">🟡 {{ predicted_class }}</span>
+            {% endif %}
+          </h1>
+        </div>
+
+        {% if image_url %}
+        <div class="rounded-2xl overflow-hidden aspect-square bg-slate-50 border border-slate-100 relative shadow-sm">
+          <img src="/{{ image_url }}" alt="Foto tanaman yang dianalisis" class="w-full h-full object-cover">
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Right Side: AI Recommendations and FAQ list -->
+      <div class="space-y-8">
+
+        <!-- Recommendation Cards -->
+        <section class="bg-white border border-slate-100 rounded-[2.5rem] p-6 md:p-8 shadow-sm space-y-6">
+          <div class="border-b border-slate-100 pb-4">
+            <h2 class="text-xl font-bold text-slate-800">Diagnosa & Rekomendasi AI</h2>
+            <p class="text-xs text-slate-500 mt-1">Saran penanganan terstruktur yang diformulasikan oleh kecerdasan
+              buatan.</p>
+          </div>
+
+          {% if data %}
+          <div class="grid grid-cols-1 gap-4">
+            <!-- Status & Penyakit Row -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <article class="rounded-2xl bg-slate-50 border border-slate-100 p-5 space-y-2">
+                <p class="text-xs font-bold text-emerald-800 uppercase tracking-wider">Kondisi</p>
+                <p class="text-base font-extrabold text-slate-800 leading-none">
+                  {% if data.status == "Sehat" %}
+                  <span
+                    class="inline-flex items-center px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold">Tanaman
+                    Sehat</span>
+                  {% else %}
+                  <span
+                    class="inline-flex items-center px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-xs font-bold">Terinfeksi
+                    Gejala</span>
+                  {% endif %}
+                </p>
+              </article>
+              <article class="rounded-2xl bg-slate-50 border border-slate-100 p-5 space-y-2">
+                <p class="text-xs font-bold text-emerald-800 uppercase tracking-wider">Nama Penyakit</p>
+                <p class="text-base font-extrabold text-slate-800 leading-none">{{ data.penyakit }}</p>
+              </article>
+            </div>
+
+            <!-- Penyebab -->
+            <article class="rounded-2xl bg-slate-50 border border-slate-100 p-5 space-y-2">
+              <p class="text-xs font-bold text-emerald-800 uppercase tracking-wider">Faktor Penyebab</p>
+              <p class="text-sm text-slate-600 leading-relaxed">{{ data.penyebab }}</p>
+            </article>
+
+            <!-- Solusi Dapur -->
+            <article class="rounded-2xl bg-emerald-50/50 border border-emerald-100 p-5 space-y-2 shadow-sm">
+              <p class="text-xs font-bold text-emerald-800 uppercase tracking-wider flex items-center gap-1.5">
+                🍳 <span>Solusi Dapur (Alami)</span>
+              </p>
+              <p class="text-sm text-slate-700 leading-relaxed">{{ data.solusi_dapur }}</p>
+            </article>
+
+            <!-- Solusi Kimia -->
+            <article class="rounded-2xl bg-teal-50/40 border border-teal-100 p-5 space-y-2 shadow-sm">
+              <p class="text-xs font-bold text-teal-800 uppercase tracking-wider flex items-center gap-1.5">
+                🧪 <span>Solusi Kimia (Lanjutan)</span>
+              </p>
+              <p class="text-sm text-slate-700 leading-relaxed">{{ data.solusi_kimia }}</p>
+            </article>
+          </div>
+          {% else %}
+          <p class="text-sm text-slate-500 py-4 text-center">Rekomendasi penanganan gagal dimuat.</p>
+          {% endif %}
+        </section>
+
+        <!-- Interactive FAQ Tautan -->
+        <section class="bg-white border border-slate-100 rounded-[2.5rem] p-6 md:p-8 shadow-sm space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+            <div>
+              <h2 class="text-xl font-bold text-slate-800">Tanya Jawab (FAQ) Lanjutan</h2>
+              <p class="text-xs text-slate-500 mt-1">Pilih pertanyaan terarah di bawah untuk informasi lebih mendalam
+                dari AI.</p>
+            </div>
+          </div>
+
+          <!-- Error limit FAQ -->
+          {% if faq_error %}
+          <div
+            class="p-4 bg-rose-50 border border-rose-200 text-rose-800 rounded-2xl text-sm font-semibold flex items-center gap-2">
+            <span>⚠️</span>
+            <span>{{ faq_error }}</span>
+          </div>
+          {% endif %}
+
+          <!-- List of Questions -->
+          <div id="faq-list-container" class="space-y-3">
+            {% if faqs %}
+            {% for faq in faqs %}
+            <a href="{{ url_for('faq_detail', question=faq) }}"
+              class="flex items-center justify-between w-full text-left font-bold text-slate-700 hover:text-emerald-700 px-5 py-4 bg-slate-50 hover:bg-emerald-50/10 border border-slate-100 rounded-2xl transition-all duration-200 group">
+              <span class="text-sm md:text-base pr-4 leading-normal font-semibold">{{ faq }}</span>
+              <span
+                class="text-slate-400 group-hover:text-emerald-600 transition-colors duration-200 text-sm shrink-0">Tanya
+                AI ➔</span>
+            </a>
+            {% endfor %}
+            {% else %}
+            <p class="text-sm text-slate-400 py-6 text-center">FAQ belum tersedia.</p>
+            {% endif %}
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div class="footer__brand-col">
+        <a href="#" class="footer__brand">
+          Kampung Tani
+        </a>
+        <p class="footer__tagline">Teman bertanam cerdas untuk gaya hidup urban yang sehat dan berkelanjutan.</p>
+      </div>
+      <div class="footer__nav-col">
+        <h4 class="footer__col-title">Navigasi</h4>
+        <ul class="footer__links">
+          <li><a href="{{ url_for('index') }}#home">Home</a></li>
+          <li><a href="{{ url_for('index') }}#about">Profile</a></li>
+          <li><a href="{{ url_for('deteksi') }}">Deteksi Penyakit</a></li>
+        </ul>
+      </div>
+
+      <div class="footer__nav-col">
+        <h4 class="footer__col-title">Ikuti Kami</h4>
+        <div class="footer__socials">
+          <a href="#" class="footer__social-link" aria-label="Website">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="2" y1="12" x2="22" y2="12" />
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+            </svg>
+          </a>
+          <a href="#" class="footer__social-link" aria-label="Share">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="18" cy="5" r="3" />
+              <circle cx="6" cy="12" r="3" />
+              <circle cx="18" cy="19" r="3" />
+              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+              <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+            </svg>
+          </a>
+          <a href="#" class="footer__social-link" aria-label="Email">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+              <polyline points="22,6 12,13 2,6" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <p>© 2026 Kampung Tani · Temani Berkebun Anda</p>
+    </div>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+
+</html>

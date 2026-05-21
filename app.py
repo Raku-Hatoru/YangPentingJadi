@@ -1,7 +1,7 @@
 import os
 import json
 import re
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for, jsonify, session
 from werkzeug.utils import secure_filename
 from ultralytics import YOLO
 from openai import OpenAI
@@ -19,6 +19,7 @@ LLM_MODEL = os.environ.get("LLM_MODEL_NAME", "default-model")
 
 # Flask Configuration (from .env)
 app = Flask(__name__)
+app.secret_key = os.environ.get("FLASK_SECRET_KEY", "kampung-tani-secret-key-12345")
 app.config['UPLOAD_FOLDER'] = os.environ.get("UPLOAD_FOLDER", "static/uploads")
 app.config['MAX_CONTENT_LENGTH'] = int(os.environ.get("MAX_CONTENT_MB", 16)) * 1024 * 1024
 
@@ -97,13 +98,22 @@ def get_llm_recommendation(predicted_class):
 def index():
     return render_template("index.html")
 
+@app.route("/home", methods=['GET'])
+def home():
+    return render_template("homepage.html")
+
+@app.route("/deteksi", methods=['GET'])
+def deteksi():
+    error = request.args.get('error')
+    return render_template("deteksiAI/paget1.html", error=error)
+
 @app.route("/predict", methods=['POST'])
 def predict():
     if 'file' not in request.files:
-        return redirect(request.url)
+        return redirect(url_for('deteksi'))
     file = request.files['file']
     if file.filename == '':
-        return redirect(request.url)
+        return redirect(url_for('deteksi'))
         
     if file and model is not None:
         filename = secure_filename(file.filename)
@@ -121,29 +131,90 @@ def predict():
             class_id = int(box.cls[0].item())
             predicted_class = model.names[class_id]
             
-            # Check if it's a chili class (ignore/exclude and redirect/render index with error)
+            # Check if it's a chili class (ignore/exclude and render deteksi with error)
             if "Chili" in predicted_class or "chili" in predicted_class.lower():
-                return render_template("index.html", 
-                                       error="Tanaman Cabai tidak didukung. Harap unggah gambar Terong, Kentang, atau Tomat.")
+                return render_template("deteksiAI/paget1.html", 
+                                       error="Gambar Tidak Terdeteksi oleh Sistem.")
             
             # Check if confidence score is below 50%
             if confidence < 0.50:
-                return render_template("index.html", 
-                                       error="Gambar kurang pas. Harap ambil foto daun/tanaman dengan lebih jelas dan fokus.")
+                return render_template("deteksiAI/paget1.html", 
+                                       error="Gambar kurang jelas. Sistem tidak dapat mendeteksi penyakit/tanaman pada gambar ini. Silakan coba lagi, harap ambil foto daun/tanaman dengan lebih jelas dan fokus.")
                                        
+            # Reset FAQ session counter
+            session['faq_count'] = 0
+            
             # Get LLM Recommendation
             data = get_llm_recommendation(predicted_class)
             
-            return render_template("result.html", 
+            # Save prediction details to session
+            session['last_prediction'] = {
+                'image_url': filepath,
+                'predicted_class': predicted_class,
+                'data': data
+            }
+            
+            return render_template("deteksiAI/paget2.html", 
                                    image_url=filepath,
                                    predicted_class=predicted_class,
                                    data=data,
-                                   faqs=faq_list)
+                                   faqs=faq_list,
+                                   faq_count=0)
         else:
-            return render_template("index.html", 
+            return render_template("deteksiAI/paget1.html", 
                                    error="Gambar kurang pas. YOLO tidak mendeteksi penyakit/tanaman pada gambar ini. Silakan coba lagi.")
                                    
-    return redirect(url_for('index'))
+    return redirect(url_for('deteksi'))
+
+@app.route("/faq_detail", methods=['GET'])
+def faq_detail():
+    question = request.args.get('question')
+    if not question:
+        return redirect(url_for('deteksi'))
+        
+    prediction = session.get('last_prediction')
+    if not prediction:
+        return redirect(url_for('deteksi'))
+        
+    predicted_class = prediction['predicted_class']
+    faq_count = session.get('faq_count', 0)
+    
+    # Check if FAQ limit of 3 is reached
+    if faq_count >= 3:
+        return render_template("deteksiAI/paget2.html",
+                               image_url=prediction['image_url'],
+                               predicted_class=predicted_class,
+                               data=prediction['data'],
+                               faqs=faq_list,
+                               faq_count=faq_count,
+                               faq_error="Batas maksimal tanya jawab FAQ (3 kali) telah tercapai untuk sesi diagnosa ini.")
+                               
+    # Request answer from LLM
+    try:
+        system_content = faq_prompt + f"\nKonteks Penyakit Tanaman Saat Ini: {predicted_class}"
+        response = client.chat.completions.create(
+            model=LLM_MODEL,
+            messages=[
+                {"role": "system", "content": system_content},
+                {"role": "user", "content": question}
+            ]
+        )
+        answer = response.choices[0].message.content.strip()
+        # Increment FAQ counter
+        faq_count += 1
+        session['faq_count'] = faq_count
+    except Exception as e:
+        print(f"FAQ API Error: {e}")
+        answer = f"Gagal menghubungi AI: {e}"
+        
+    return render_template("deteksiAI/paget3.html",
+                           image_url=prediction['image_url'],
+                           predicted_class=predicted_class,
+                           data=prediction['data'],
+                           faqs=faq_list,
+                           faq_count=faq_count,
+                           question=question,
+                           answer=answer)
 
 @app.route("/ask_faq", methods=['POST'])
 def ask_faq():

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Deteksi Penyakit Tanaman - Kampung Tani</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Lora:ital,wght@0,400;0,600;0,700;1,400&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+
+<body style="background: var(--cream); min-height: 100vh; display: flex; flex-direction: column;">
+
+  <!-- ========== NAVBAR ========== -->
+  <nav class="navbar">
+    <div class="container navbar__inner">
+      <a href="{{ url_for('index') }}" class="navbar__brand">
+        <span class="navbar__logo-icon" aria-hidden="true">
+          <img src="{{ url_for('static', filename='images/Kampung Tani Logo.png') }}">
+        </span>
+        <span class="navbar__brand-text">Kampung Tani</span>
+      </a>
+      <button class="navbar__toggle" id="navToggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="navbar__menu" id="navMenu">
+        <li><a href="{{ url_for('index') }}#home" class="navbar__link">Home</a></li>
+        <li><a href="{{ url_for('index') }}#about" class="navbar__link">Profile</a></li>
+        <li><a href="{{ url_for('deteksi') }}" class="navbar__link navbar__link--active">Deteksi Penyakit</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ========== DETECT FORM SECTION ========== -->
+  <main style="flex-grow: 1; display: flex; align-items: center; padding: 4rem 0;">
+    <section class="detect-form" style="background: transparent; padding: 0; width: 100%;">
+      <div class="container detect-form__inner">
+        <div class="detect-form__info">
+          <span class="detect-form__badge">Pindai Daun</span>
+          <h2 class="detect-form__title">Mulai Pengecekan AI Tanaman Anda</h2>
+          <p class="detect-form__text">
+            Unggah foto daun tanaman sayur anda yang mengalami bercak, kering, atau layu. Sistem YOLO akan
+            membaca gejala visual dan asisten AI akan menyusun panduan solusi dapur alami serta solusi kimia instan
+            untuk Anda.
+          </p>
+
+          <!-- Error Alerts -->
+          {% if error %}
+          <div class="alert alert--error">
+            <span class="alert__icon"></span>
+            <div>
+              <div class="alert__title">Gambar Tidak Terdeteksi</div>
+              <div class="alert__desc">{{ error }}</div>
+            </div>
+          </div>
+          {% endif %}
+
+          <div class="detect-form__tips">
+            <h4 class="detect-form__tips-title">Cara Memaksimalkan Foto:</h4>
+            <ul class="detect-form__tips-list">
+              <li>
+                <span class="detect-form__tips-icon--check">✓</span>
+                <span>Pastikan foto berfokus tajam pada satu daun atau buah yang bergejala.</span>
+              </li>
+              <li>
+                <span class="detect-form__tips-icon--check">✓</span>
+                <span>Ambil gambar pada area terbuka dengan cahaya matahari cukup.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <form id="prediction-form" action="{{ url_for('predict') }}" method="post" enctype="multipart/form-data"
+          class="detect-form__card">
+          <input id="file-input" name="file" type="file" accept=".jpg,.jpeg,.png,.webp,image/*" required
+            style="display:none;">
+
+          <!-- Drag & Drop Zone -->
+          <div id="drop-zone" class="drop-zone">
+            <span class="drop-zone__icon"></span>
+            <h3 class="drop-zone__title">Ketuk di sini untuk mengambil foto</h3>
+            <p class="drop-zone__desc">Mendukung format JPG, JPEG, PNG, atau WEBP<br>Maksimal ukuran file 16MB</p>
+          </div>
+
+          <!-- Kamera & Galeri Actions -->
+          <div class="detect-form__btn-group">
+            <button type="button" id="btn-gallery" class="btn btn--outline">
+              Pilih Galeri
+            </button>
+            <button type="button" id="btn-camera" class="btn btn--primary">
+              Ambil Kamera
+            </button>
+          </div>
+
+          <!-- Image Preview Box -->
+          <div id="preview-wrapper" class="preview-box hidden">
+            <div class="preview-box__image-wrap">
+              <img id="preview-image" alt="Pratinjau berkas tanaman" class="preview-box__image">
+            </div>
+            <div class="preview-box__info">
+              <span id="preview-name" class="preview-box__name"></span>
+              <span id="reset-button" class="preview-box__delete">Hapus Foto</span>
+            </div>
+          </div>
+
+          <!-- Action Submit -->
+          <button type="submit" id="submit-button" class="btn btn--primary"
+            style="padding: 1.1rem; font-size: 1rem; width: 100%;">
+            Mulai Analisis Deteksi Sekarang
+          </button>
+
+          <!-- Dynamic Loader -->
+          <div id="loading-box" class="loading-box hidden">
+            <div class="loading-box__spinner"></div>
+            <div>
+              <div class="loading-box__title">AI Sedang Menganalisis...</div>
+              <div class="loading-box__desc">Sedang mengklasifikasi visual YOLO dan merumuskan saran rekomendasi. Harap
+                bersabar sebentar.</div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div class="footer__brand-col">
+        <a href="#" class="footer__brand">
+          Kampung Tani
+        </a>
+        <p class="footer__tagline">Teman bertanam cerdas untuk gaya hidup urban yang sehat dan berkelanjutan.</p>
+      </div>
+      <div class="footer__nav-col">
+        <h4 class="footer__col-title">Navigasi</h4>
+        <ul class="footer__links">
+          <li><a href="{{ url_for('index') }}#home">Home</a></li>
+          <li><a href="{{ url_for('index') }}#about">Profile</a></li>
+          <li><a href="{{ url_for('deteksi') }}">Deteksi Penyakit</a></li>
+        </ul>
+      </div>
+
+      <div class="footer__nav-col">
+        <h4 class="footer__col-title">Ikuti Kami</h4>
+        <div class="footer__socials">
+          <a href="#" class="footer__social-link" aria-label="Website">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="2" y1="12" x2="22" y2="12" />
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+            </svg>
+          </a>
+          <a href="#" class="footer__social-link" aria-label="Share">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="18" cy="5" r="3" />
+              <circle cx="6" cy="12" r="3" />
+              <circle cx="18" cy="19" r="3" />
+              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+              <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+            </svg>
+          </a>
+          <a href="#" class="footer__social-link" aria-label="Email">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+              <polyline points="22,6 12,13 2,6" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <p>© 2026 Kampung Tani · Temani Berkebun Anda</p>
+    </div>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+
+</html>
