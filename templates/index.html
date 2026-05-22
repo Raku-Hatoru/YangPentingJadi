@@ -9,26 +9,22 @@
 </head>
 
 <body>
-    <!-- Navbar -->
+    <!-- ========== NAVBAR ========== -->
     <nav class="navbar">
-        <div class="navbar-brand">
-            <div class="brand-icon"> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" />
-                    <path d="M8 12s1.5 2 4 2 4-2 4-2" />
-                    <line x1="9" y1="9" x2="9.01" y2="9" />
-                    <line x1="15" y1="9" x2="15.01" y2="9" />
-                </svg> </div>
-            <div>
-                <div class="brand-name">Kampung Tani</div>
-                <div class="brand-status">Online | Siap membantu</div>
-            </div>
+        <div class="container navbar__inner">
+            <a href="{{ url_for('home') }}" class="navbar__brand">
+                <span class="navbar__logo-icon" aria-hidden="true">
+                    <img src="{{ url_for('static', filename='images/Kampung Tani Logo.png') }}">
+                </span>
+                <span class="navbar__brand-text">Kampung Tani</span>
+            </a>
+
+            <ul class="navbar__menu" id="navMenu">
+                <li><a href="{{ url_for('home') }}" class="navbar__link navbar__link--active">Home</a></li>
+                <li><a href="{{ url_for('profile') }}" class="navbar__link">Profile</a></li>
+                <li><a href="{{ url_for('deteksi') }}" class="navbar__link">Deteksi Penyakit</a></li>
+            </ul>
         </div>
-        <ul class="nav-links">
-            <li><a href="#" class="nav-link active">Home</a></li>
-            <li><a href="#" class="nav-link">Profile</a></li>
-            <li><a href="#" class="nav-link">Deteksi Penyakit</a></li>
-        </ul>
     </nav>
 
     <!-- Chat area -->

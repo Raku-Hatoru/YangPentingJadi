@@ -100,7 +100,11 @@ def index():
 
 @app.route("/home", methods=['GET'])
 def home():
-    return render_template("homepage.html")
+    return render_template('homepage.html')
+
+@app.route("/profile", methods=['GET'])
+def profile():
+    return render_template('homepage.html')
 
 @app.route("/deteksi", methods=['GET'])
 def deteksi():
